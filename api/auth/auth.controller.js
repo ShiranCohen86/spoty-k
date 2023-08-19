@@ -1,12 +1,14 @@
 const authService = require('./auth.service');
 const logger = require("../../services/logger.service");
 
-require('dotenv').config()
-
 async function getSpotifyToken(req, res) {
   try {
+    console.log("req.body.code", req.body);
+    console.log("req.body.code", req.body?.code);
+    console.log("req.session", req.session);
     if (!req.session.access_token) {
       const code = req.body.code
+
       const resAxios = await authService.getSpotifyToken(code)
 
       req.session.access_token = resAxios.access_token
@@ -18,7 +20,7 @@ async function getSpotifyToken(req, res) {
     }
 
   } catch (err) {
-    logger.error("Failed to getCallback", err);
+    //logger.error("Failed to getCallback", err);
     res.status(500).send({ err: "Failed to getCallback" });
   }
 }
