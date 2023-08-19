@@ -1,6 +1,8 @@
 const logger = require('../../services/logger.service');
 const Axios = require('axios');
 
+require('dotenv').config()
+
 module.exports = {
 	getSpotifyToken,
 };
