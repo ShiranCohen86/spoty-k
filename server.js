@@ -35,8 +35,10 @@ app.use(session);
 
 const usersRoutes = require("./api/users/users.routes");
 const authRoutes = require("./api/auth/auth.routes");
+const playerRoutes = require("./api/player/player.routes")
 
 app.use("/api/users", usersRoutes);
+app.use("/api/player", playerRoutes);
 app.use("/api/session", (req, res) => {
     const isLoggedIn = req.session.isLoggedIn ? true : false
     console.log(typeof (isLoggedIn));
