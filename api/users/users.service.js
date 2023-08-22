@@ -1,23 +1,20 @@
 const Axios = require('axios');
 const logger = require('../../services/logger.service');
+const { makeSpotifyRequest } = require('../../services/spotify.service');
 
 module.exports = {
 	getMyUserDetails,
 };
 
-async function getMyUserDetails(accessToken) {
+function getMyUserDetails(accessToken) {
 	try {
-		return await Axios.get("https://api.spotify.com/v1/me", {
-			headers: { Authorization: `Bearer ${accessToken}` }
-		})
+		const url = "https://api.spotify.com/v1/me"
+		const method = "get"
+
+		return makeSpotifyRequest(url, method, accessToken)
+
 	} catch (err) {
-		logger.error(`while finding user ${accessToken}`, err);
+		logger.error("Function getMyUserDetails users.service", (err.response?.data || err));
 		throw err;
 	}
 }
-
-
-
-
-
-

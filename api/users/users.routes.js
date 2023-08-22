@@ -3,6 +3,6 @@ const router = express.Router();
 const { log } = require("../../middlewares/logger.middleware");
 const { getMyUserDetails } = require("./users.controller");
 
-router.get("/", log, getMyUserDetails);
+router.get("/me", log, getMyUserDetails);
 
 module.exports = router;

@@ -3,9 +3,6 @@ const logger = require("../../services/logger.service");
 
 async function getSpotifyToken(req, res) {
   try {
-    console.log("req.body.code", req.body);
-    console.log("req.body.code", req.body?.code);
-    console.log("req.session", req.session);
     if (!req.session.access_token) {
       const code = req.body.code
 
@@ -20,8 +17,8 @@ async function getSpotifyToken(req, res) {
     }
 
   } catch (err) {
-    //logger.error("Failed to getCallback", err);
-    res.status(500).send({ err: "Failed to getCallback" });
+    logger.error("Failed to getCallback", err.response?.data);
+    res.status(500).send(err.response?.data);
   }
 }
 

@@ -26,7 +26,8 @@ async function getSpotifyToken(code) {
 		})
 		return resAxios.data
 	} catch (err) {
-		logger.error(`while finding user `, err);
+		logger.error("Failed to getSpotifyToken", err.response?.data);
+		res.status(500).send(err.response?.data);
 		throw err;
 	}
 }

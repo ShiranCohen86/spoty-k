@@ -1,60 +1,73 @@
-const Axios = require('axios');
-const logger = require('../../services/logger.service');
+const { makeSpotifyRequest } = require('../../services/spotify.service');
 
 module.exports = {
-	playSong,
-	getAvailDevices
+	getPlaybackState,
+	doTransferPlayback,
+	getAvailDevices,
+	getCurrPlay,
+	playOnDevice,
+	pauseOnDevice,
+	nextOnDevice
 };
 
-async function playSong(accessToken) {
-	try {
+function getPlaybackState(accessToken, market = "", type = "") {
+	const url = `https://api.spotify.com/v1/me/player?${market ? `market=${market}` : ""}${type ? `&additional_types=${type}` : ""}`
+	const method = "get"
 
-		const test = await Axios({
-			url: "https://api.spotify.com/v1/me/player/play?device_id:d56778359711b017aa6af352d593209b4e111b57",
-			method: 'PUT',
-			params: {
-
-				uri: 'spotify:track:08bNPGLD8AhKpnnERrAc6G'
-			},
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${accessToken}`
-			}
-		})
-		console.log("test", test);
-		return { "test": "test" }
-		//return await Axios.put("https://api.spotify.com/v1/me/player/play", { params: { context_uri: "spotify:album:1Je1IMUlBXcx1Fz0WE7oPT" } }, {
-
-		//	headers: { Authorization: `Bearer ${accessToken}` }
-		//})
-	} catch (err) {
-		logger.error(`while playing song`, err);
-		throw err;
-	}
+	return makeSpotifyRequest(url, method, accessToken)
 }
 
-async function getAvailDevices(accessToken) {
-	try {
-		const test = await Axios({
-			url: "https://api.spotify.com/v1/me/player",
-			method: 'get',
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		})
-		console.dir(test);
-		return test
-		//return await Axios.put("https://api.spotify.com/v1/me/player/play", { params: { context_uri: "spotify:album:1Je1IMUlBXcx1Fz0WE7oPT" } }, {
-
-		//	headers: { Authorization: `Bearer ${accessToken}` }
-		//})
-	} catch (err) {
-		logger.error(`availDevices ${accessToken}`, err);
-		throw err;
+function doTransferPlayback(accessToken, deviceId, isPlay = false) {
+	const url = "https://api.spotify.com/v1/me/player"
+	const method = "put"
+	const bodyParams = {
+		"device_ids": [deviceId],
+		"play": isPlay
 	}
+
+	return makeSpotifyRequest(url, method, accessToken, bodyParams)
 }
 
+function getAvailDevices(accessToken) {
+	const url = "https://api.spotify.com/v1/me/player/devices"
+	const method = "get"
 
+	return makeSpotifyRequest(url, method, accessToken)
+}
+
+function getCurrPlay(accessToken, market = "", type = "") {
+	const url = `https://api.spotify.com/v1/me/player/currently-playing${(market || type) ? "?" : ""}${market ? `market=${market}` : ""}${type ? `&additional_types=${type}` : ""}`
+	const method = "get"
+
+	return makeSpotifyRequest(url, method, accessToken)
+}
+
+function playOnDevice(accessToken, deviceId = "", contextUri = "", uris = "", offset = "", positionMs = 0) {
+	const url = `https://api.spotify.com/v1/me/player/play${deviceId ? `?device_id=${deviceId}` : ""}`
+	const method = "put"
+	const bodyParams = {
+		"context_uri": contextUri,
+		uris,
+		offset,
+		"position_ms": positionMs,
+	}
+
+	return makeSpotifyRequest(url, method, accessToken, bodyParams)
+}
+
+function pauseOnDevice(accessToken, deviceId = "") {
+	const url = `https://api.spotify.com/v1/me/player/pause${deviceId ? `?device_id=${deviceId}` : ""}`
+	const method = "put"
+
+	return makeSpotifyRequest(url, method, accessToken)
+}
+
+function nextOnDevice(accessToken, deviceId = "") {
+	const url = `https://api.spotify.com/v1/me/player/next${deviceId ? `?device_id=${deviceId}` : ""}`
+	const method = "post"
+
+	return makeSpotifyRequest(url, method, accessToken)
+}
 
 
 
