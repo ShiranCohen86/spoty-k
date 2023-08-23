@@ -8,7 +8,6 @@ const logger = require("./services/logger.service");
 
 require('dotenv').config()
 
-
 const session = expressSession({
     secret: "coding is amazing",
     resave: false,
@@ -44,7 +43,6 @@ app.use("/api/session", (req, res) => {
     console.log(typeof (isLoggedIn));
     res.send(isLoggedIn)
 });
-
 app.use("/api/auth", authRoutes);
 
 // Make every server-side-route to match the index.html

@@ -11,7 +11,8 @@ async function makeSpotifyRequest(url, method, accessToken, params = {}) {
             }
         })
     } catch (err) {
-        logger.error("Do Http Request", err.response?.data); throw err
+        //logger.error("Do Http Request", err.response?.data); 
+        throw err
     }
 }
 
