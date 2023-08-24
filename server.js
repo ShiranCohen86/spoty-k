@@ -28,9 +28,14 @@ if (process.env.NODE_ENV === "production") {
     };
     app.use(cors(corsOptions));
 }
+
 // Express App Config
 app.use(express.json());
 app.use(session);
+
+const setupAsyncLocalStorage = require("./middlewares/setupAls.middleware");
+app.all("*", setupAsyncLocalStorage);
+
 
 const usersRoutes = require("./api/users/users.routes");
 const authRoutes = require("./api/auth/auth.routes");

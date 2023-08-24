@@ -1,4 +1,6 @@
-const { makeSpotifyRequest } = require('../../services/spotify.service');
+
+const { makeSpotifyRequest, convertObjToQueryStr } = require('../../services/spotify.service');
+const { httpGet, httpPut } = require('../../services/httpService');
 
 module.exports = {
 	getPlaybackState,
@@ -18,101 +20,76 @@ module.exports = {
 	addToQueue
 };
 
-function getPlaybackState(accessToken, market = "", type = "") {
-	const url = `https://api.spotify.com/v1/me/player${(market || type) ? "?" : ""}${market ? `market=${market}` : ""}${type ? `${market ? "&" : ""}additional_types=${type}` : ""}`
-	const method = "get"
 
-	return makeSpotifyRequest(url, method, accessToken)
+//getPlaybackState("text", { market: "test1", type: "test2" })
+function getPlaybackState(data) {
+	return httpGet("/me/player", data)
 }
 
-function doTransferPlayback(accessToken, deviceId, isPlay = false) {
-	const url = "https://api.spotify.com/v1/me/player"
-	const method = "put"
-	const bodyParams = {
-		"device_ids": [deviceId],
-		"play": isPlay
-	}
+function doTransferPlayback(data) {
+	return httpPut("/me/player", data)
 
-	return makeSpotifyRequest(url, method, accessToken, bodyParams)
 }
 
-function getAvailDevices(accessToken) {
-	const url = "https://api.spotify.com/v1/me/player/devices"
-	const method = "get"
-
-	return makeSpotifyRequest(url, method, accessToken)
+function getAvailDevices() {
+	return httpGet("/me/player/devices")
 }
 
-function getCurrPlay(accessToken, market = "", type = "") {
-	const url = `https://api.spotify.com/v1/me/player/currently-playing${(market || type) ? "?" : ""}${market ? `market=${market}` : ""}${type ? `${market ? "&" : ""}additional_types=${type}` : ""}`
-	const method = "get"
-
-	return makeSpotifyRequest(url, method, accessToken)
+function getCurrPlay(data) {
+	return httpGet("/me/player/currently-playing", data)
 }
 
-function play(accessToken, deviceId = "", contextUri = "", uris = "", offset = "", positionMs = 0) {
-	const url = `https://api.spotify.com/v1/me/player/play${deviceId ? `?device_id=${deviceId}` : ""}`
-	const method = "put"
-	const bodyParams = {
-		"context_uri": contextUri,
-		uris,
-		offset,
-		"position_ms": positionMs,
-	}
-
-	return makeSpotifyRequest(url, method, accessToken, bodyParams)
+function play(data) {
+	return httpPut("/me/player/play", data)
 }
 
-function pause(accessToken, deviceId = "") {
-	const url = `https://api.spotify.com/v1/me/player/pause${deviceId ? `?device_id=${deviceId}` : ""}`
-	const method = "put"
-
-	return makeSpotifyRequest(url, method, accessToken)
+function pause(data) {
+	return httpPut("/me/player/pause", data)
 }
 
-function next(accessToken, deviceId = "") {
+function next(deviceId = "") {
 	const url = `https://api.spotify.com/v1/me/player/next${deviceId ? `?device_id=${deviceId}` : ""}`
 	const method = "post"
 
 	return makeSpotifyRequest(url, method, accessToken)
 }
 
-function previous(accessToken, deviceId = "") {
+function previous(deviceId = "") {
 	const url = `https://api.spotify.com/v1/me/player/previous${deviceId ? `?device_id=${deviceId}` : ""}`
 	const method = "post"
 
 	return makeSpotifyRequest(url, method, accessToken)
 }
 
-function seekToPosition(accessToken, deviceId = "", positionMs) {
+function seekToPosition(deviceId = "", positionMs) {
 	const url = `https://api.spotify.com/v1/me/player/seek?position_ms=${positionMs}${deviceId ? `&device_id=${deviceId}` : ""}`
 	const method = "put"
 
 	return makeSpotifyRequest(url, method, accessToken)
 }
 
-function setRepeatMode(accessToken, deviceId = "", state) {
+function setRepeatMode(deviceId = "", state) {
 	const url = `https://api.spotify.com/v1/me/player/repeat?state=${state}${deviceId ? `&device_id=${deviceId}` : ""}`
 	const method = "put"
 
 	return makeSpotifyRequest(url, method, accessToken)
 }
 
-function setVolume(accessToken, deviceId = "", volumePercent) {
+function setVolume(deviceId = "", volumePercent) {
 	const url = `https://api.spotify.com/v1/me/player/volume?volume_percent=${volumePercent}${deviceId ? `&device_id=${deviceId}` : ""}`
 	const method = "put"
 
 	return makeSpotifyRequest(url, method, accessToken)
 }
 
-function toggleShuffle(accessToken, deviceId = "", state) {
+function toggleShuffle(deviceId = "", state) {
 	const url = `https://api.spotify.com/v1/me/player/shuffle?state=${state}${deviceId ? `&device_id=${deviceId}` : ""}`
 	const method = "put"
 
 	return makeSpotifyRequest(url, method, accessToken)
 }
 
-function getRecentlyPlayed(accessToken, limit = "", after = "", before = "") {
+function getRecentlyPlayed(limit = "", after = "", before = "") {
 	const url = `https://api.spotify.com/v1/me/player/recently-played${(limit || after || before) ? "?" : ""}${limit ? `limit=${limit}` : ""}${(limit) ? "&" : ""}${after ? `after=${after}` : ""}${(after || limit) ? "&" : ""}${before ? `before=${before}` : ""}`
 	const method = "get"
 
@@ -126,7 +103,7 @@ function getQueue(accessToken) {
 	return makeSpotifyRequest(url, method, accessToken)
 }
 
-function addToQueue(accessToken, deviceId = "", uri) {
+function addToQueue(deviceId = "", uri) {
 	const url = `https://api.spotify.com/v1/me/player/repeat?uri=${uri}${deviceId ? `&device_id=${deviceId}` : ""}`
 	const method = "post"
 

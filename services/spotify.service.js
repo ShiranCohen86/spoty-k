@@ -15,9 +15,19 @@ async function makeSpotifyRequest(url, method, accessToken, params = {}) {
         throw err
     }
 }
+function convertObjToQueryStr(params) {
+    let paramStr = ""
+    for (property in params) {
+        const isFirstParam = paramStr.length ? `&` : "?"
+        paramStr += isFirstParam + `${property}=${params[property]}`
+    }
+
+    return paramStr
+}
 
 module.exports = {
-    makeSpotifyRequest
+    makeSpotifyRequest,
+    convertObjToQueryStr
 }
 
 

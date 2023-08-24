@@ -1,4 +1,3 @@
-const logger = require('../../services/logger.service');
 const playerService = require('./player.service');
 
 module.exports = {
@@ -21,15 +20,12 @@ module.exports = {
 
 async function getPlaybackState(req, res) {
   try {
-
-    const { market, type } = req.query;
-    const accessToken = req.session.access_token
-    const resPlaybackState = await playerService.getPlaybackState(accessToken, market, type)
+    const queryParams = req.query;
+    const resPlaybackState = await playerService.getPlaybackState(queryParams)
 
     res.json(resPlaybackState.data)
-
   } catch (err) {
-    logger.error("Function getPlaybackState player.controller");
+    console.log("Function getPlaybackState player.controller");
 
     if (err.response) {
       console.dir(err.response.data);
@@ -43,14 +39,12 @@ async function getPlaybackState(req, res) {
 
 async function doTransferPlayback(req, res) {
   try {
-    const accessToken = req.session.access_token
-    const { deviceId, isPlay = false } = req.body
-    const resDoTransfer = await playerService.doTransferPlayback(accessToken, deviceId, isPlay)
+    const bodyParams = req.body
+    const resDoTransfer = await playerService.doTransferPlayback(bodyParams)
 
     res.json(resDoTransfer.data)
-
   } catch (err) {
-    logger.error("Function doTransferPlayback player.controller");
+    console.log("Function doTransferPlayback player.controller");
 
     if (err.response) {
       console.dir(err.response.data);
@@ -59,19 +53,16 @@ async function doTransferPlayback(req, res) {
       console.log(err);
       res.status(500).json(err);
     }
-
   }
 }
 
 async function getAvailDevices(req, res) {
   try {
-    const accessToken = req.session.access_token
-    const resAvailDevices = await playerService.getAvailDevices(accessToken)
+    const resAvailDevices = await playerService.getAvailDevices()
 
     res.json(resAvailDevices.data)
-
   } catch (err) {
-    logger.error("Function getAvailDevices player.controller");
+    console.log("Function getAvailDevices player.controller");
 
     if (err.response) {
       console.dir(err.response.data);
@@ -85,14 +76,12 @@ async function getAvailDevices(req, res) {
 
 async function getCurrPlay(req, res) {
   try {
-    const { market, type } = req.query
-    const accessToken = req.session.access_token
-    const resCurrPlay = await playerService.getCurrPlay(accessToken, market, type)
+    const queryParams = req.query
+    const resCurrPlay = await playerService.getCurrPlay(queryParams)
 
     res.json(resCurrPlay.data)
-
   } catch (err) {
-    logger.error("Function getCurrPlay player.controller");
+    console.log("Function getCurrPlay player.controller");
 
     if (err.response) {
       console.dir(err.response.data);
@@ -101,20 +90,17 @@ async function getCurrPlay(req, res) {
       console.log(err);
       res.status(500).json(err);
     }
-
   }
 }
 
 async function play(req, res) {
   try {
-    const accessToken = req.session.access_token
-    const { deviceId, contextUri, uris, offset, positionMs } = req.body
-    const isPlay = await playerService.play(accessToken, deviceId, contextUri, uris, offset, positionMs)
+    const queryBody = req.body;
+    const isPlay = await playerService.play(queryBody)
 
     res.json(true)
-
   } catch (err) {
-    logger.error("Function playOnDevice player.controller");
+    console.log("Function playOnDevice player.controller");
 
     if (err.response) {
       console.dir(err.response.data);
@@ -123,21 +109,17 @@ async function play(req, res) {
       console.log(err);
       res.status(500).json(err);
     }
-
-    res.status(500).send(err);
   }
 }
 
 async function pause(req, res) {
   try {
-    const accessToken = req.session.access_token
-    const { deviceId } = req.body
-    const isPause = await playerService.pause(accessToken, deviceId)
+    const queryBody = req.body
+    const isPause = await playerService.pause(queryBody)
 
     res.send(true)
-
   } catch (err) {
-    logger.error("Function pauseOnDevice player.controller");
+    console.log("Function pauseOnDevice player.controller");
 
     if (err.response) {
       console.dir(err.response.data);
@@ -151,14 +133,12 @@ async function pause(req, res) {
 
 async function next(req, res) {
   try {
-    const accessToken = req.session.access_token
-    const { deviceId } = req.body
-    const isNext = await playerService.next(accessToken, deviceId)
+    const queryBody = req.body
+    const isNext = await playerService.next(queryBody)
 
     res.send(true)
-
   } catch (err) {
-    logger.error("Function nextOnDevice player.controller");
+    console.log("Function nextOnDevice player.controller");
 
     if (err.response) {
       console.dir(err.response.data);
@@ -167,20 +147,17 @@ async function next(req, res) {
       console.log(err);
       res.status(500).json(err);
     }
-
   }
 }
 
 async function previous(req, res) {
   try {
-    const accessToken = req.session.access_token
-    const { deviceId } = req.body
-    const isPrevious = await playerService.previous(accessToken, deviceId)
+    const queryBody = req.body
+    const isPrevious = await playerService.previous(queryBody)
 
     res.send(true)
-
   } catch (err) {
-    logger.error("Function previousOnDevice player.controller");
+    console.log("Function previousOnDevice player.controller");
 
     if (err.response) {
       console.dir(err.response.data);
@@ -189,20 +166,17 @@ async function previous(req, res) {
       console.log(err);
       res.status(500).json(err);
     }
-
   }
 }
 
 async function seekToPosition(req, res) {
   try {
-    const accessToken = req.session.access_token
-    const { positionMs, deviceId } = req.body
-    const iSeekToPosition = await playerService.seekToPosition(accessToken, deviceId, positionMs)
+    const queryBody = req.body
+    const iSeekToPosition = await playerService.seekToPosition(queryBody)
 
     res.send(true)
-
   } catch (err) {
-    logger.error("Function seekToPosition player.controller");
+    console.log("Function seekToPosition player.controller");
 
     if (err.response) {
       console.dir(err.response.data);
@@ -211,20 +185,17 @@ async function seekToPosition(req, res) {
       console.log(err);
       res.status(500).json(err);
     }
-
   }
 }
 
 async function setRepeatMode(req, res) {
   try {
-    const accessToken = req.session.access_token
-    const { state, deviceId } = req.body
-    const isRepeatMode = await playerService.setRepeatMode(accessToken, deviceId, state)
+    const queryBody = req.body
+    const isRepeatMode = await playerService.setRepeatMode(queryBody)
 
     res.send(true)
-
   } catch (err) {
-    logger.error("Function setRepeatMode player.controller");
+    console.log("Function setRepeatMode player.controller");
 
     if (err.response) {
       console.dir(err.response.data);
@@ -233,20 +204,17 @@ async function setRepeatMode(req, res) {
       console.log(err);
       res.status(500).json(err);
     }
-
   }
 }
 
 async function setVolume(req, res) {
   try {
-    const accessToken = req.session.access_token
-    const { volumePercent, deviceId } = req.body
-    const isSetVolume = await playerService.setVolume(accessToken, deviceId, volumePercent)
+    const queryBody = req.body
+    const isSetVolume = await playerService.setVolume(queryBody)
 
     res.send(true)
-
   } catch (err) {
-    logger.error("Function setVolume player.controller");
+    console.log("Function setVolume player.controller");
 
     if (err.response) {
       console.dir(err.response.data);
@@ -255,20 +223,17 @@ async function setVolume(req, res) {
       console.log(err);
       res.status(500).json(err);
     }
-
   }
 }
 
 async function toggleShuffle(req, res) {
   try {
-    const accessToken = req.session.access_token
-    const { state, deviceId } = req.body
-    const isShuffle = await playerService.toggleShuffle(accessToken, deviceId, state)
+    const queryBody = req.body
+    const isShuffle = await playerService.toggleShuffle(queryBody)
 
     res.send(true)
-
   } catch (err) {
-    logger.error("Function toggleShuffle player.controller");
+    console.log("Function toggleShuffle player.controller");
 
     if (err.response) {
       console.dir(err.response.data);
@@ -277,20 +242,17 @@ async function toggleShuffle(req, res) {
       console.log(err);
       res.status(500).json(err);
     }
-
   }
 }
 
 async function getRecentlyPlayed(req, res) {
   try {
-    const accessToken = req.session.access_token
-    const { limit, after, before } = req.query
-    const resDoTransfer = await playerService.getRecentlyPlayed(accessToken, limit, after, before)
+    const queryParams = req.query
+    const resDoTransfer = await playerService.getRecentlyPlayed(queryParams)
 
     res.json(resDoTransfer.data)
-
   } catch (err) {
-    logger.error("Function getRecentlyPlayed player.controller");
+    console.log("Function getRecentlyPlayed player.controller");
 
     if (err.response) {
       console.dir(err.response.data);
@@ -299,19 +261,16 @@ async function getRecentlyPlayed(req, res) {
       console.log(err);
       res.status(500).json(err);
     }
-
   }
 }
 
 async function getQueue(req, res) {
   try {
-    const accessToken = req.session.access_token
-    const resAvailDevices = await playerService.getQueue(accessToken)
+    const resAvailDevices = await playerService.getQueue()
 
     res.json(resAvailDevices.data)
-
   } catch (err) {
-    logger.error("Function getQueue player.controller");
+    console.log("Function getQueue player.controller");
 
     if (err.response) {
       console.dir(err.response.data);
@@ -325,14 +284,12 @@ async function getQueue(req, res) {
 
 async function addToQueue(req, res) {
   try {
-    const accessToken = req.session.access_token
-    const { uri, deviceId } = req.body
-    const isAddToQueue = await playerService.addToQueue(accessToken, deviceId, uri)
+    const bodyParams = req.body
+    const isAddToQueue = await playerService.addToQueue(bodyParams)
 
     res.send(true)
-
   } catch (err) {
-    logger.error("Function addToQueue player.controller");
+    console.log("Function addToQueue player.controller");
 
     if (err.response) {
       console.dir(err.response.data);
@@ -341,6 +298,5 @@ async function addToQueue(req, res) {
       console.log(err);
       res.status(500).json(err);
     }
-
   }
 }
