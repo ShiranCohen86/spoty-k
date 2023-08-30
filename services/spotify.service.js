@@ -18,8 +18,9 @@ async function makeSpotifyRequest(url, method, accessToken, params = {}) {
 function convertObjToQueryStr(params) {
     let paramStr = ""
     for (property in params) {
+        if (!params[property]) continue
         const isFirstParam = paramStr.length ? `&` : "?"
-        paramStr += isFirstParam + `${property}=${params[property]}`
+        paramStr += isFirstParam + `${property}=${Array.isArray(params[property]) ? `["` : ""}${params[property]}${Array.isArray(params[property]) ? `"]` : ""}`
     }
 
     return paramStr

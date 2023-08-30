@@ -3,7 +3,7 @@ const router = express.Router();
 
 const {
     getPlaybackState,
-    doTransferPlayback,
+    transferPlayback,
     getAvailDevices,
     getCurrPlay,
     play,
@@ -20,7 +20,7 @@ const {
 } = require("./player.controller");
 
 router.get("/state", getPlaybackState);
-router.put("/transfer", doTransferPlayback);
+router.put("/transfer", transferPlayback);
 router.get("/devices", getAvailDevices);
 router.get("/curr-play", getCurrPlay);
 router.put("/play", play);
@@ -31,7 +31,7 @@ router.put("/seek", seekToPosition);
 router.put("/repeat", setRepeatMode);
 router.put("/volume", setVolume);
 router.put("/shuffle", toggleShuffle);
-router.get("/recently-played", getRecentlyPlayed);
+router.get("/recently", getRecentlyPlayed);
 router.get("/queue", getQueue);
 router.post("/queue", addToQueue);
 

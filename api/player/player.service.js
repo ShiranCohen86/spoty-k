@@ -1,10 +1,10 @@
 
 const { makeSpotifyRequest, convertObjToQueryStr } = require('../../services/spotify.service');
-const { httpGet, httpPut } = require('../../services/httpService');
+const { httpGet, httpPut, httpPost, httpDelete } = require('../../services/httpService');
 
 module.exports = {
 	getPlaybackState,
-	doTransferPlayback,
+	transferPlayback,
 	getAvailDevices,
 	getCurrPlay,
 	play,
@@ -20,92 +20,144 @@ module.exports = {
 	addToQueue
 };
 
-
-//getPlaybackState("text", { market: "test1", type: "test2" })
-function getPlaybackState(data) {
-	return httpGet("/me/player", data)
+function getPlaybackState(queryParams) {
+	const dataParams = {
+		queryParams: {
+			market: queryParams?.market,
+			additional_types: queryParams?.type
+		}
+	}
+	return httpGet("/me/player", dataParams)
 }
 
-function doTransferPlayback(data) {
-	return httpPut("/me/player", data)
-
+function transferPlayback(bodyParams) {
+	const dataParams = {
+		bodyParams: {
+			device_ids: bodyParams.ids,
+			play: bodyParams?.isPlay
+		}
+	}
+	return httpPut(`/me/player`, dataParams)
 }
 
 function getAvailDevices() {
 	return httpGet("/me/player/devices")
 }
 
-function getCurrPlay(data) {
-	return httpGet("/me/player/currently-playing", data)
+function getCurrPlay(queryParams) {
+	const dataParams = {
+		queryParams: {
+			market: queryParams?.market,
+			additional_types: queryParams?.type
+		}
+	}
+	return httpGet("/me/player/currently-playing", dataParams)
 }
 
-function play(data) {
-	return httpPut("/me/player/play", data)
+function play({ queryParams, bodyParams }) {
+	const dataParams = {
+		queryParams: {
+			device_id: queryParams?.id,
+		},
+		bodyParams: {
+			context_uri: bodyParams?.contextUri,
+			uris: bodyParams?.uris,
+			offset: bodyParams?.offset,
+			position_ms: bodyParams?.positionMs,
+		}
+	}
+	return httpPut("/me/player/play", dataParams)
 }
 
-function pause(data) {
-	return httpPut("/me/player/pause", data)
+function pause(queryParams) {
+	const dataParams = {
+		queryParams: {
+			device_id: queryParams?.id,
+		}
+	}
+	return httpPut("/me/player/pause", dataParams)
 }
 
-function next(deviceId = "") {
-	const url = `https://api.spotify.com/v1/me/player/next${deviceId ? `?device_id=${deviceId}` : ""}`
-	const method = "post"
-
-	return makeSpotifyRequest(url, method, accessToken)
+function next(queryParams) {
+	const dataParams = {
+		queryParams: {
+			device_id: queryParams?.id,
+		}
+	}
+	return httpPost("/me/player/next", dataParams)
 }
 
-function previous(deviceId = "") {
-	const url = `https://api.spotify.com/v1/me/player/previous${deviceId ? `?device_id=${deviceId}` : ""}`
-	const method = "post"
-
-	return makeSpotifyRequest(url, method, accessToken)
+function previous(queryParams) {
+	const dataParams = {
+		queryParams: {
+			device_id: queryParams?.id,
+		}
+	}
+	return httpPost("/me/player/previous", dataParams)
 }
 
-function seekToPosition(deviceId = "", positionMs) {
-	const url = `https://api.spotify.com/v1/me/player/seek?position_ms=${positionMs}${deviceId ? `&device_id=${deviceId}` : ""}`
-	const method = "put"
+function seekToPosition(queryParams) {
+	const dataParams = {
+		queryParams: {
+			device_id: queryParams?.id,
+			position_ms: queryParams.ms
+		}
+	}
+	return httpPut("/me/player/seek", dataParams)
 
-	return makeSpotifyRequest(url, method, accessToken)
 }
 
-function setRepeatMode(deviceId = "", state) {
-	const url = `https://api.spotify.com/v1/me/player/repeat?state=${state}${deviceId ? `&device_id=${deviceId}` : ""}`
-	const method = "put"
-
-	return makeSpotifyRequest(url, method, accessToken)
+function setRepeatMode(queryParams) {
+	const dataParams = {
+		queryParams: {
+			device_id: queryParams?.id,
+			state: queryParams.state
+		}
+	}
+	return httpPut("/me/player/repeat", dataParams)
 }
 
-function setVolume(deviceId = "", volumePercent) {
-	const url = `https://api.spotify.com/v1/me/player/volume?volume_percent=${volumePercent}${deviceId ? `&device_id=${deviceId}` : ""}`
-	const method = "put"
-
-	return makeSpotifyRequest(url, method, accessToken)
+function setVolume(queryParams) {
+	const dataParams = {
+		queryParams: {
+			device_id: queryParams?.id,
+			volume_percent: queryParams.volume
+		}
+	}
+	return httpPut("/me/player/volume", dataParams)
 }
 
-function toggleShuffle(deviceId = "", state) {
-	const url = `https://api.spotify.com/v1/me/player/shuffle?state=${state}${deviceId ? `&device_id=${deviceId}` : ""}`
-	const method = "put"
-
-	return makeSpotifyRequest(url, method, accessToken)
+function toggleShuffle(queryParams) {
+	const dataParams = {
+		queryParams: {
+			device_id: queryParams?.id,
+			state: queryParams.state
+		}
+	}
+	return httpPut("/me/player/shuffle", dataParams)
 }
 
-function getRecentlyPlayed(limit = "", after = "", before = "") {
-	const url = `https://api.spotify.com/v1/me/player/recently-played${(limit || after || before) ? "?" : ""}${limit ? `limit=${limit}` : ""}${(limit) ? "&" : ""}${after ? `after=${after}` : ""}${(after || limit) ? "&" : ""}${before ? `before=${before}` : ""}`
-	const method = "get"
-
-	return makeSpotifyRequest(url, method, accessToken)
+function getRecentlyPlayed(queryParams) {
+	const dataParams = {
+		queryParams: {
+			limit: queryParams?.limit,
+			after: queryParams?.after,
+			before: queryParams?.before,
+		}
+	}
+	return httpGet("/me/player/recently-played", dataParams)
 }
 
-function getQueue(accessToken) {
-	const url = "https://api.spotify.com/v1/me/player/queue"
-	const method = "get"
-
-	return makeSpotifyRequest(url, method, accessToken)
+function getQueue() {
+	return httpGet("/me/player/queue")
 }
 
-function addToQueue(deviceId = "", uri) {
-	const url = `https://api.spotify.com/v1/me/player/repeat?uri=${uri}${deviceId ? `&device_id=${deviceId}` : ""}`
-	const method = "post"
-
-	return makeSpotifyRequest(url, method, accessToken)
+function addToQueue(queryParams) {
+	const dataParams = {
+		queryParams: {
+			uri: queryParams.uri,
+			device_id: queryParams?.id,
+		}
+	}
+	return httpPost("/me/player/queue", dataParams)
 }

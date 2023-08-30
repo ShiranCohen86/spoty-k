@@ -11,66 +11,57 @@ const axios = Axios.create({
 function httpGet(endpoint, data) {
     return ajax(endpoint, 'GET', data)
 }
+
 function httpPost(endpoint, data) {
     return ajax(endpoint, 'POST', data)
 }
+
 function httpPut(endpoint, data) {
     return ajax(endpoint, 'PUT', data)
 }
+
 function httpDelete(endpoint, data) {
     return ajax(endpoint, 'DELETE', data)
 }
 
 
-async function ajax(endpoint, method = 'GET', data = {}) {
+async function ajax(endpoint, method = 'GET', { queryParams = "", bodyParams = "" } = "") {
     try {
         const alsStore = asyncLocalStorage.getStore()
         const headers = {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${alsStore.spotifyToken}`
         }
-        /*
-        if (method === 'PUT') {
-            if ((endpoint === "/me/player")) {
 
-                //queryStr = (data["deviceId"]) ? convertObjToQueryStr({ "device_id": data["deviceId"] }) : ""
-            } else if ((endpoint === "/me/player/play")) {
-
-                const queryStr = ((method === 'PUT') && (endpoint === "/me/player/play")) ? convertObjToQueryStr({ "device_id": data["device_id"] }) : ""
-                delete data["device_id"]
-            }
-        } else {
-
-        }
-
-        let queryStr = (((endpoint === "/me/player") && (method === 'PUT')))
-        queryStr = (((endpoint === "/me/player/play") && (method === 'PUT')))
-        */
-
+        const dataParams = {}
         let queryStr = ""
-        if ((method === 'PUT') && (endpoint === "/me/player/play")) {
-            queryStr = convertObjToQueryStr({ "device_id": data["device_id"] })
-            console.log("queryStr", queryStr);
-            delete data["device_id"]
+        if (queryParams) {
+            dataParams.queryParams = queryParams
+            queryStr = convertObjToQueryStr(dataParams.queryParams)
         }
-        if (method === 'GET') {
-            queryStr = convertObjToQueryStr(data)
+        if (bodyParams) {
+            dataParams.bodyParams = bodyParams
         }
-        console.log({ data });
+
+        if ((endpoint.includes("images") && (method === "PUT"))) {
+            headers["Content-Type"] = "image/jpeg"
+        }
         const axiosOptions = {
             url: `${BASE_URL}${endpoint}${queryStr}`,
             method,
             headers,
-            data
-        }
-        if (method === 'GET') {
-            delete axiosOptions.data
         }
 
-        const res = await axios(axiosOptions)
-        return res
+        if (method !== 'GET') {
+            const bodyParams = dataParams?.bodyParams || false
+            if (bodyParams) {
+                axiosOptions.data = bodyParams
+            }
+        }
+        console.log(axiosOptions);
+        return await axios(axiosOptions)
     } catch (err) {
-        console.log(`Had Issues ${method}ing to the backend, endpoint: ${endpoint}, with data: ${data}`)
+        console.log(`Had Issues ${method}ing to the backend, endpoint: ${endpoint},`)// with data: ${data}`)
 
         if (err.response && err.response.status === 401) {
 
@@ -78,7 +69,6 @@ async function ajax(endpoint, method = 'GET', data = {}) {
         throw err
     }
 }
-
 
 module.exports = {
     httpGet,

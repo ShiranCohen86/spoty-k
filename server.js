@@ -40,12 +40,15 @@ app.all("*", setupAsyncLocalStorage);
 const usersRoutes = require("./api/users/users.routes");
 const authRoutes = require("./api/auth/auth.routes");
 const playerRoutes = require("./api/player/player.routes")
+const albumsRoutes = require("./api/albums/albums.routes")
+const audiobooksRoutes = require("./api/audiobooks/audiobooks.routes")
 
 app.use("/api/users", usersRoutes);
 app.use("/api/player", playerRoutes);
+app.use("/api/albums", albumsRoutes);
+app.use("/api/audiobooks", audiobooksRoutes);
 app.use("/api/session", (req, res) => {
     const isLoggedIn = req.session.isLoggedIn ? true : false
-    console.log(typeof (isLoggedIn));
     res.send(isLoggedIn)
 });
 app.use("/api/auth", authRoutes);

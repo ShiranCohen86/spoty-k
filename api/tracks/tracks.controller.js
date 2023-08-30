@@ -1,44 +1,26 @@
-const usersService = require('./users.service');
+const tracksService = require('./tracks.service');
 
 module.exports = {
-  getMyDetails,
-  getMyTopItems,
-  getUserProfile,
-  followPlaylistById,
-  unFollowPlaylistById,
-  getFollowedArtists,
-  followUsersByIds,
-  unFollowUsersByIds,
-  isMeFollowsUsers,
-  isMeFollowsPlaylist
+  getTrackById,
+  getTracksByIds,
+  getSavedTracks,
+  addTracksByIds,
+  removeTracksByIds,
+  isTracksSavedByIds,
+  getAudioFeaturesByTracksIds,
+  getAudioFeaturesByTrackId,
+  getAudioAnalysisByTrackId,
+  getRecommendationTracks
 }
 
-async function getMyDetails(req, res) {
-  try {
-    const resData = await usersService.getMyDetails()
-
-    res.json(resData.data)
-  } catch (err) {
-    console.log("Function getMyDetails users.controller");
-
-    if (err.response?.data) {
-      console.dir(err.response.data);
-      res.status(500).json(err.response.data.error);
-    } else {
-      console.log(err);
-      res.status(500).json(err);
-    }
-  }
-}
-
-async function getMyTopItems(req, res) {
+async function getTrackById(req, res) {
   try {
     const queryParams = req.query;
-    const resData = await usersService.getMyTopItems(queryParams)
+    const resData = await tracksService.getTrackById(queryParams)
 
     res.json(resData.data)
   } catch (err) {
-    console.log("Function getMyTopItems users.controller");
+    console.log("Function getTrackById tracks.controller");
 
     if (err.response?.data) {
       console.dir(err.response.data);
@@ -50,14 +32,14 @@ async function getMyTopItems(req, res) {
   }
 }
 
-async function getUserProfile(req, res) {
+async function getTracksByIds(req, res) {
   try {
     const queryParams = req.query;
-    const resData = await usersService.getUserProfile(queryParams)
+    const resData = await tracksService.getTracksByIds(queryParams)
 
     res.json(resData.data)
   } catch (err) {
-    console.log("Function getMyTopItems users.controller");
+    console.log("Function getTracksByIds tracks.controller");
 
     if (err.response?.data) {
       console.dir(err.response.data);
@@ -69,15 +51,14 @@ async function getUserProfile(req, res) {
   }
 }
 
-async function followPlaylistById(req, res) {
+async function getSavedTracks(req, res) {
   try {
     const queryParams = req.query;
-    const bodyParams = req.body;
-    const resData = await usersService.followPlaylistById({ queryParams, bodyParams })
+    const resData = await tracksService.getSavedTracks(queryParams)
 
     res.json(resData.data)
   } catch (err) {
-    console.log("Function followPlaylistById users.controller");
+    console.log("Function getSavedTracks tracks.controller");
 
     if (err.response?.data) {
       console.dir(err.response.data);
@@ -89,14 +70,14 @@ async function followPlaylistById(req, res) {
   }
 }
 
-async function unFollowPlaylistById(req, res) {
+async function addTracksByIds(req, res) {
   try {
     const queryParams = req.query;
-    const resData = await usersService.unFollowPlaylistById(queryParams)
+    const resData = await tracksService.addTracksByIds(queryParams)
 
     res.json(resData.data)
   } catch (err) {
-    console.log("Function unFollowPlaylistById users.controller");
+    console.log("Function addTracksByIds tracks.controller");
 
     if (err.response?.data) {
       console.dir(err.response.data);
@@ -108,14 +89,14 @@ async function unFollowPlaylistById(req, res) {
   }
 }
 
-async function getFollowedArtists(req, res) {
+async function removeTracksByIds(req, res) {
   try {
     const queryParams = req.query;
-    const resData = await usersService.getFollowedArtists(queryParams)
+    const resData = await tracksService.removeTracksByIds(queryParams)
 
     res.json(resData.data)
   } catch (err) {
-    console.log("Function getFollowedArtists users.controller");
+    console.log("Function removeTracksByIds tracks.controller");
 
     if (err.response?.data) {
       console.dir(err.response.data);
@@ -127,15 +108,14 @@ async function getFollowedArtists(req, res) {
   }
 }
 
-async function followUsersByIds(req, res) {
+async function isTracksSavedByIds(req, res) {
   try {
     const queryParams = req.query;
-    const bodyParams = req.body;
-    const resData = await usersService.followUsersByIds({ queryParams, bodyParams })
+    const resData = await tracksService.isTracksSavedByIds(queryParams)
 
     res.json(resData.data)
   } catch (err) {
-    console.log("Function followUsersByIds users.controller");
+    console.log("Function isTracksSavedByIds tracks.controller");
 
     if (err.response?.data) {
       console.dir(err.response.data);
@@ -147,16 +127,15 @@ async function followUsersByIds(req, res) {
   }
 }
 
-async function unFollowUsersByIds(req, res) {
+async function getAudioFeaturesByTracksIds(req, res) {
   try {
     const queryParams = req.query;
-    const bodyParams = req.body;
-    const resData = await usersService.unFollowUsersByIds({ queryParams, bodyParams })
-    
+    const resData = await tracksService.getAudioFeaturesByTracksIds(queryParams)
+
     res.json(resData.data)
   } catch (err) {
-    console.log("Function unFollowUsersByIds users.controller");
-    
+    console.log("Function getAudioFeaturesByTracksIds tracks.controller");
+
     if (err.response?.data) {
       console.dir(err.response.data);
       res.status(500).json(err.response.data.error);
@@ -166,15 +145,14 @@ async function unFollowUsersByIds(req, res) {
     }
   }
 }
-
-async function isMeFollowsUsers(req, res) {
+async function getAudioFeaturesByTrackId(req, res) {
   try {
     const queryParams = req.query;
-    const resData = await usersService.isMeFollowsUsers(queryParams)
+    const resData = await tracksService.getAudioFeaturesByTrackId(queryParams)
 
     res.json(resData.data)
   } catch (err) {
-    console.log("Function isMeFollowsUsers users.controller");
+    console.log("Function getAudioFeaturesByTrackId tracks.controller");
 
     if (err.response?.data) {
       console.dir(err.response.data);
@@ -185,15 +163,14 @@ async function isMeFollowsUsers(req, res) {
     }
   }
 }
-
-async function isMeFollowsPlaylist(req, res) {
+async function getAudioAnalysisByTrackId(req, res) {
   try {
     const queryParams = req.query;
-    const resData = await usersService.isMeFollowsPlaylist(queryParams)
+    const resData = await tracksService.getAudioAnalysisByTrackId(queryParams)
 
     res.json(resData.data)
   } catch (err) {
-    console.log("Function isMeFollowsPlaylist users.controller");
+    console.log("Function getAudioAnalysisByTrackId tracks.controller");
 
     if (err.response?.data) {
       console.dir(err.response.data);
@@ -204,3 +181,23 @@ async function isMeFollowsPlaylist(req, res) {
     }
   }
 }
+
+async function getRecommendationTracks(req, res) {
+  try {
+    const queryParams = req.query;
+    const resData = await tracksService.getRecommendationTracks(queryParams)
+
+    res.json(resData.data)
+  } catch (err) {
+    console.log("Function getRecommendationTracks tracks.controller");
+
+    if (err.response?.data) {
+      console.dir(err.response.data);
+      res.status(500).json(err.response.data.error);
+    } else {
+      console.log(err);
+      res.status(500).json(err);
+    }
+  }
+}
+

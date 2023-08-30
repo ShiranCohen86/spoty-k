@@ -2,7 +2,7 @@ const playerService = require('./player.service');
 
 module.exports = {
   getPlaybackState,
-  doTransferPlayback,
+  transferPlayback,
   getAvailDevices,
   getCurrPlay,
   play,
@@ -21,9 +21,9 @@ module.exports = {
 async function getPlaybackState(req, res) {
   try {
     const queryParams = req.query;
-    const resPlaybackState = await playerService.getPlaybackState(queryParams)
+    const resData = await playerService.getPlaybackState(queryParams)
 
-    res.json(resPlaybackState.data)
+    res.json(resData.data)
   } catch (err) {
     console.log("Function getPlaybackState player.controller");
 
@@ -37,14 +37,14 @@ async function getPlaybackState(req, res) {
   }
 }
 
-async function doTransferPlayback(req, res) {
+async function transferPlayback(req, res) {
   try {
     const bodyParams = req.body
-    const resDoTransfer = await playerService.doTransferPlayback(bodyParams)
+    const resData = await playerService.transferPlayback(bodyParams)
 
-    res.json(resDoTransfer.data)
+    res.json(resData.data)
   } catch (err) {
-    console.log("Function doTransferPlayback player.controller");
+    console.log("Function transferPlayback player.controller");
 
     if (err.response) {
       console.dir(err.response.data);
@@ -58,9 +58,9 @@ async function doTransferPlayback(req, res) {
 
 async function getAvailDevices(req, res) {
   try {
-    const resAvailDevices = await playerService.getAvailDevices()
+    const resData = await playerService.getAvailDevices()
 
-    res.json(resAvailDevices.data)
+    res.json(resData.data)
   } catch (err) {
     console.log("Function getAvailDevices player.controller");
 
@@ -77,9 +77,9 @@ async function getAvailDevices(req, res) {
 async function getCurrPlay(req, res) {
   try {
     const queryParams = req.query
-    const resCurrPlay = await playerService.getCurrPlay(queryParams)
+    const resData = await playerService.getCurrPlay(queryParams)
 
-    res.json(resCurrPlay.data)
+    res.json(resData.data)
   } catch (err) {
     console.log("Function getCurrPlay player.controller");
 
@@ -95,8 +95,9 @@ async function getCurrPlay(req, res) {
 
 async function play(req, res) {
   try {
-    const queryBody = req.body;
-    const isPlay = await playerService.play(queryBody)
+    const bodyParams = req.body;
+    const queryParams = req.query;
+    const isPlay = await playerService.play({ bodyParams, queryParams })
 
     res.json(true)
   } catch (err) {
@@ -114,8 +115,8 @@ async function play(req, res) {
 
 async function pause(req, res) {
   try {
-    const queryBody = req.body
-    const isPause = await playerService.pause(queryBody)
+    const queryParams = req.query
+    const isPause = await playerService.pause(queryParams)
 
     res.send(true)
   } catch (err) {
@@ -133,8 +134,8 @@ async function pause(req, res) {
 
 async function next(req, res) {
   try {
-    const queryBody = req.body
-    const isNext = await playerService.next(queryBody)
+    const queryParams = req.query
+    const isNext = await playerService.next(queryParams)
 
     res.send(true)
   } catch (err) {
@@ -152,8 +153,8 @@ async function next(req, res) {
 
 async function previous(req, res) {
   try {
-    const queryBody = req.body
-    const isPrevious = await playerService.previous(queryBody)
+    const queryParams = req.query
+    const isPrevious = await playerService.previous(queryParams)
 
     res.send(true)
   } catch (err) {
@@ -171,8 +172,8 @@ async function previous(req, res) {
 
 async function seekToPosition(req, res) {
   try {
-    const queryBody = req.body
-    const iSeekToPosition = await playerService.seekToPosition(queryBody)
+    const queryParams = req.query
+    const iSeekToPosition = await playerService.seekToPosition(queryParams)
 
     res.send(true)
   } catch (err) {
@@ -190,8 +191,8 @@ async function seekToPosition(req, res) {
 
 async function setRepeatMode(req, res) {
   try {
-    const queryBody = req.body
-    const isRepeatMode = await playerService.setRepeatMode(queryBody)
+    const queryParams = req.query
+    const isRepeatMode = await playerService.setRepeatMode(queryParams)
 
     res.send(true)
   } catch (err) {
@@ -209,8 +210,8 @@ async function setRepeatMode(req, res) {
 
 async function setVolume(req, res) {
   try {
-    const queryBody = req.body
-    const isSetVolume = await playerService.setVolume(queryBody)
+    const queryParams = req.query
+    const isSetVolume = await playerService.setVolume(queryParams)
 
     res.send(true)
   } catch (err) {
@@ -228,8 +229,8 @@ async function setVolume(req, res) {
 
 async function toggleShuffle(req, res) {
   try {
-    const queryBody = req.body
-    const isShuffle = await playerService.toggleShuffle(queryBody)
+    const queryParams = req.query
+    const isShuffle = await playerService.toggleShuffle(queryParams)
 
     res.send(true)
   } catch (err) {
@@ -248,9 +249,9 @@ async function toggleShuffle(req, res) {
 async function getRecentlyPlayed(req, res) {
   try {
     const queryParams = req.query
-    const resDoTransfer = await playerService.getRecentlyPlayed(queryParams)
+    const resData = await playerService.getRecentlyPlayed(queryParams)
 
-    res.json(resDoTransfer.data)
+    res.json(resData.data)
   } catch (err) {
     console.log("Function getRecentlyPlayed player.controller");
 
@@ -266,9 +267,9 @@ async function getRecentlyPlayed(req, res) {
 
 async function getQueue(req, res) {
   try {
-    const resAvailDevices = await playerService.getQueue()
+    const resData = await playerService.getQueue()
 
-    res.json(resAvailDevices.data)
+    res.json(resData.data)
   } catch (err) {
     console.log("Function getQueue player.controller");
 
@@ -284,8 +285,8 @@ async function getQueue(req, res) {
 
 async function addToQueue(req, res) {
   try {
-    const bodyParams = req.body
-    const isAddToQueue = await playerService.addToQueue(bodyParams)
+    const queryParams = req.query
+    const isAddToQueue = await playerService.addToQueue(queryParams)
 
     res.send(true)
   } catch (err) {
