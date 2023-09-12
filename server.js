@@ -42,8 +42,12 @@ const authRoutes = require("./api/auth/auth.routes");
 const playerRoutes = require("./api/player/player.routes")
 const albumsRoutes = require("./api/albums/albums.routes")
 const audiobooksRoutes = require("./api/audiobooks/audiobooks.routes")
+const playlistsRoutes = require("./api/playlists/playlists.routes")
+const tracksRoutes = require("./api/tracks/tracks.routes")
 
 app.use("/api/users", usersRoutes);
+app.use("/api/playlists", playlistsRoutes);
+app.use("/api/tracks", tracksRoutes);
 app.use("/api/player", playerRoutes);
 app.use("/api/albums", albumsRoutes);
 app.use("/api/audiobooks", audiobooksRoutes);

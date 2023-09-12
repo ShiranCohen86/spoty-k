@@ -22,11 +22,12 @@ function getAlbumById(queryParams) {
 }
 
 function getAlbumsByIds(queryParams) {
+	console.log("queryParams", queryParams);
 	// ids - comma-separated , max 20 IDs  ; IDs Examples: 382ObEPsp2rxGrnsizN5TX %2 C1A2GTWGtFfWp7KSQTwWOyo %2 C2noRn2Aes5aoNVsU6iWThc
 	const dataParams = {
 		queryParams: {
 			market: queryParams?.market,
-			ids: queryParams.ids
+			ids: (queryParams.ids).join(",").toString()
 		}
 	}
 	return httpGet(`/albums`, dataParams)
@@ -53,26 +54,27 @@ function getSavedAlbums(queryParams) {
 	}
 	return httpGet(`/me/albums`, dataParams)
 }
-
-function addAlbumsByIds({ queryParams, bodyParams }) {
+//"3sW7wD2qdMjs7KncaOoIJ5" "7K6OykPbezfgKgBufihn6X" "06RK0wX4GqHcxBtHlVoGH5"
+//function addAlbumsByIds({ queryParams, bodyParams }) {
+function addAlbumsByIds(bodyParams) {
 	const dataParams = {
 		queryParams: {
-			ids: queryParams.ids,
+			ids: (bodyParams.ids).join(",").toString(),
 		},
 		bodyParams: {
-			ids: [bodyParams?.ids]
+			ids: bodyParams?.ids
 		}
 	}
 	return httpPut(`/me/albums`, dataParams)
 }
 
-function removeAlbumsByIds({ queryParams, bodyParams }) {
+function removeAlbumsByIds(bodyParams) {
 	const dataParams = {
 		queryParams: {
-			ids: queryParams.ids,
+			ids: (bodyParams.ids).join(",").toString(),
 		},
 		bodyParams: {
-			ids: [bodyParams.ids]
+			ids: bodyParams.ids
 		}
 	}
 	return httpDelete(`/me/albums`, dataParams)

@@ -24,7 +24,7 @@ router.get("/tracks", getTrackByPlaylistId);
 router.put("/tracks", editTracksByPlaylistId);
 router.post("/add", addItemsToPlaylist);
 router.delete("/remove", removeItemsToPlaylist);
-router.get("/me", getPlaylists);
+router.get("/saved", getPlaylists);
 router.get("/by-user", getPlaylistsByUserId);
 router.post("/create", createPlaylist);
 router.get("/featured", getFeaturedPlaylists);

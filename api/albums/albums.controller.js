@@ -14,9 +14,16 @@ module.exports = {
 async function getAlbumById(req, res) {
   try {
     const queryParams = req.query;
-    const resData = await albumsService.getAlbumById(queryParams)
+    const { data } = await albumsService.getAlbumById(queryParams)
+    console.log("album by id", data);
+    //console.log("market:", data.available_markets); data.available_markets
+    const albumToReturn = {
+      albumType: data.album_type,
+      countTracks: data.total_tracks,
+      markets: data.available_markets,
+    }
 
-    res.json(resData.data)
+    res.json(data)
   } catch (err) {
     console.log("Function getAlbumById albums.controller");
 
@@ -33,9 +40,10 @@ async function getAlbumById(req, res) {
 async function getAlbumsByIds(req, res) {
   try {
     const queryParams = req.query;
-    const resData = await albumsService.getAlbumsByIds(queryParams)
+    const { data } = await albumsService.getAlbumsByIds(queryParams)
+    console.log(data);
 
-    res.json(resData.data)
+    res.json(data.albums)
   } catch (err) {
     console.log("Function getAlbumsByIds albums.controller");
 
@@ -71,9 +79,10 @@ async function getTracksByAlbumId(req, res) {
 async function getSavedAlbums(req, res) {
   try {
     const queryParams = req.query;
-    const resData = await albumsService.getSavedAlbums(queryParams)
+    const { data } = await albumsService.getSavedAlbums(queryParams)
+    console.dir(data.items);
 
-    res.json(resData.data)
+    res.json(data)
   } catch (err) {
     console.log("Function getSavedAlbums albums.controller");
 
@@ -89,9 +98,10 @@ async function getSavedAlbums(req, res) {
 
 async function addAlbumsByIds(req, res) {
   try {
-    const queryParams = req.query;
+    //const queryParams = req.query;
     const bodyParams = req.body;
-    const resData = await albumsService.addAlbumsByIds({ queryParams, bodyParams })
+    const resData = await albumsService.addAlbumsByIds(bodyParams)
+    //const resData = await albumsService.addAlbumsByIds({ queryParams, bodyParams })
 
     res.json(resData.data)
   } catch (err) {
@@ -109,9 +119,8 @@ async function addAlbumsByIds(req, res) {
 
 async function removeAlbumsByIds(req, res) {
   try {
-    const queryParams = req.query;
     const bodyParams = req.body;
-    const resData = await albumsService.removeAlbumsByIds({ queryParams, bodyParams })
+    const resData = await albumsService.removeAlbumsByIds(bodyParams)
 
     res.json(resData.data)
   } catch (err) {

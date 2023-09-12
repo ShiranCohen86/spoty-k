@@ -109,6 +109,7 @@ async function removeTracksByIds(req, res) {
 }
 
 async function isTracksSavedByIds(req, res) {
+  console.log("HERE!!!!!!");
   try {
     const queryParams = req.query;
     const resData = await tracksService.isTracksSavedByIds(queryParams)
